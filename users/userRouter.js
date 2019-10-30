@@ -63,7 +63,15 @@ router.get('/:id/posts', validateUserId, (req, res) => {
 });
 
 router.delete('/:id', validateUserId, (req, res) => {
-
+    userDb.remove(req.user.id)
+    .then(resp => {
+        // console.log(resp)
+        res.sendStatus(204)
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 router.put('/:id', validateUserId, validateUser, (req, res) => {
