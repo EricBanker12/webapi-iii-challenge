@@ -5,7 +5,15 @@ const db = require('./userDb')
 const router = express.Router();
 
 router.post('/', validateUser, (req, res) => {
-
+    db.insert(req.body)
+    .then(resp => {
+        // console.log(resp)
+        res.status(201).json(resp)
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
