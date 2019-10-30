@@ -35,7 +35,15 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
 });
 
 router.get('/', (req, res) => {
-
+    userDb.get()
+    .then(resp => {
+        // console.log(resp)
+        res.json(resp)
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 router.get('/:id', validateUserId, (req, res) => {
