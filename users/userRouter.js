@@ -4,7 +4,7 @@ const db = require('./userDb')
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.post('/', validateUser, (req, res) => {
 
 });
 
@@ -28,7 +28,7 @@ router.delete('/:id', validateUserId, (req, res) => {
 
 });
 
-router.put('/:id', validateUserId, (req, res) => {
+router.put('/:id', validateUserId, validateUser, (req, res) => {
 
 });
 
@@ -39,7 +39,10 @@ function validateUserId(req, res, next) {
     db.getById(id)
     .then(resp => {
         // console.log(resp)
-        if (resp) req.user = resp
+        if (resp) {
+            req.user = resp
+            next()
+        }
         else res.status(400).json({message: "invalid user id"})
     })
     .catch(err => {
@@ -49,7 +52,15 @@ function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
-
+    if (!req.body) {
+        res.status(400).json({message: "missing user data"})
+        return
+    }
+    if (!req.body.name) {
+        res.status(400).json({message: "missing required name field"})
+        return
+    }
+    next()
 };
 
 function validatePost(req, res, next) {
