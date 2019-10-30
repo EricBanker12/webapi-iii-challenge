@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', validateUserId, (req, res) => {
-
+    res.json(req.user)
 });
 
 router.get('/:id/posts', validateUserId, (req, res) => {
