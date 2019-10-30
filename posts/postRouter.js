@@ -5,7 +5,15 @@ const postDb = require('./postDb')
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    
+    postDb.get()
+    .then(resp => {
+        // console.log(resp)
+        res.json(resp)
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 router.get('/:id', validatePostId, (req, res) => {
