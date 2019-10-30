@@ -32,8 +32,19 @@ router.delete('/:id', validatePostId, (req, res) => {
     })
 });
 
-router.put('/:id', validatePostId, (req, res) => {
-    
+router.put('/:id', validatePostId, validatePost, (req, res) => {
+    postDb.update(req.post.id, {text: req.body.text})
+    .then(resp => {
+        // console.log(resp)
+        postDb.getById(req.post.id)
+        .then(resp => {
+            res.json(resp)
+        })
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 // custom middleware
@@ -54,6 +65,18 @@ function validatePostId(req, res, next) {
         // console.log(err)
         res.sendStatus(500)
     })
+};
+
+function validatePost(req, res, next) {
+    if (!req.body) {
+        res.status(400).json({message: "missing put data"})
+        return
+    }
+    if (!req.body.text) {
+        res.status(400).json({message: "missing required text field"})
+        return
+    }
+    next()
 };
 
 module.exports = router;
