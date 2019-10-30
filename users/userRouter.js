@@ -6,9 +6,7 @@ const postDb = require('../posts/postDb')
 const router = express.Router();
 
 router.post('/', validateUser, (req, res) => {
-    const name = req.body.name
-    
-    userDb.insert({name})
+    userDb.insert({name: req.body.name})
     .then(resp => {
         // console.log(resp)
         res.status(201).json(resp)
@@ -75,7 +73,18 @@ router.delete('/:id', validateUserId, (req, res) => {
 });
 
 router.put('/:id', validateUserId, validateUser, (req, res) => {
-
+    userDb.update(req.user.id, {name: req.body.name})
+    .then(resp => {
+        // console.log(resp)
+        userDb.getById(req.user.id)
+        .then(resp => {
+            res.json(resp)
+        })
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 //custom middleware
