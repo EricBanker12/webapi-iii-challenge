@@ -1,11 +1,14 @@
 const express = require('express');
 
-const db = require('./userDb')
+const userDb = require('./userDb')
+const postDb = require('../posts/postDb')
 
 const router = express.Router();
 
 router.post('/', validateUser, (req, res) => {
-    db.insert(req.body)
+    const name = req.body.name
+    
+    userDb.insert({name})
     .then(resp => {
         // console.log(resp)
         res.status(201).json(resp)
@@ -17,7 +20,18 @@ router.post('/', validateUser, (req, res) => {
 });
 
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
-
+    const text = req.body.text
+    const user_id = req.user.id
+    
+    postDb.insert({text, user_id})
+    .then(resp => {
+        // console.log(resp)
+        res.status(201).json(resp)
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 router.get('/', (req, res) => {
@@ -44,7 +58,7 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
 
 function validateUserId(req, res, next) {
     const id = Number(req.params.id)
-    db.getById(id)
+    userDb.getById(id)
     .then(resp => {
         // console.log(resp)
         if (resp) {
