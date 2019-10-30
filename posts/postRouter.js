@@ -21,11 +21,19 @@ router.get('/:id', validatePostId, (req, res) => {
 });
 
 router.delete('/:id', validatePostId, (req, res) => {
-
+    postDb.remove(req.post.id)
+    .then(resp => {
+        // console.log(resp)
+        res.sendStatus(204)
+    })
+    .catch(err => {
+        // console.log(err)
+        res.sendStatus(500)
+    })
 });
 
 router.put('/:id', validatePostId, (req, res) => {
-
+    
 });
 
 // custom middleware
